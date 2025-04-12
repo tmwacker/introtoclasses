@@ -1,44 +1,41 @@
 // Programmer: Timothy Wacker
+
 #include <iostream>
-#include "date.h"
-
-using namespace std;
-
-// Test function to print date
-void test(const string& description, const Date& d) {
-    cout << description << ": " << d.printNumeric() << endl;
-}
+#include <random>
+#include "NumberArray.h"
 
 int main() {
-    // Test constructors and setDate method
-    Date defaultDate;
-    test("Test default constructor", defaultDate);
+    // Test the default 
+    NumberArray arr1;
+    std::cout << "Array from default constructor: ";
+    arr1.displayArray();
 
-    Date validDate(2, 28, 2009);
-    test("Test constructor with valid date", validDate);
+    // Test constructor with a custom size
+    NumberArray arr2(15);
+    std::cout << "Array from constructor with size 15: ";
+    arr2.displayArray();
 
-    Date invalidMonth(45, 2, 2009);
-    test("Test constructor with invalid month (45, 2, 2009)", invalidMonth);
+    // Fill array with random values between 1.0 and 100.0
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<> dis(1.0, 100.0);
+    for (int i = 0; i < 15; i++) {
+        arr2.storeNumber(i, dis(gen));
+    }
+    std::cout << "Array after filling with random numbers: ";
+    arr2.displayArray();
 
-    Date invalidDay(2, 29, 2009);
-    test("Test constructor with invalid day (2, 29, 2009)", invalidDay);
+    // out-of-bounds access
+    arr2.storeNumber(20, 50.0);  
 
-    Date d1;
-    d1.setDate(13, 15, 2000);
-    test("setDate with bad month (13)", d1);
+    // Retrieve and display values at specific indices
+    std::cout << "Access item at index 5: " << arr2.getNumber(5) << std::endl;
+    std::cout << "Access item at index 20 (out of bounds): " << arr2.getNumber(20) << std::endl;
 
-    d1.setDate(4, 31, 2009);
-    test("setDate with bad day (4, 31, 2009)", d1);
-
-    d1.setDate(2, 29, 2009);
-    test("leap year with bad date (2, 29, 2009)", d1);
-
-    d1.setDate(2, 29, 2008);
-    test("leap year with good date (2, 29, 2008)", d1);
-
-    cout << "print formats:\n";
-    cout << d1.printLong() << endl;
-    cout << d1.printDayFirst() << endl;
+    // Display minimum, maximum, and average
+    std::cout << "The minimum value in the array is: " << arr2.getMin() << std::endl;
+    std::cout << "The maximum value in the array is: " << arr2.getMax() << std::endl;
+    std::cout << "The average of the values in the array is: " << arr2.getAverage() << std::endl;
 
     return 0;
 }
